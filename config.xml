@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns       = "http://www.w3.org/ns/widgets"
+    xmlns:gap       = "http://phonegap.com/ns/1.0"
+    xmlns:android   = "http://schemas.android.com/apk/res/android"
+    id              = "com.david.imagenotes"
+    version         = "1.0.0">
+	
+<name>Image Notes</name>
+
+<description>
+Image Notes
+</description>
+
+<author href="" email="">
+David Gong
+</author>
+
+<icon src="" />
+<gap:splash src="" />
+
+<supports-screens android:anyDensity="true" android:resizeable="true" 
+    android:smallScreens="true" 
+    android:normalScreens="true" 
+    android:largeScreens="true" 
+    android:xlargeScreens="true" />
+
+</widget>
