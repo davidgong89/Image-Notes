@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--device ready codes-->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.css" />
+    <script type="text/javascript" src="jquery.mobile-1.4.2/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    
+<title>Secret Journal</title>
+</head>
+
+<body>
+
+<div data-role="page" id="home">
+  <div data-role="header">
+  	<a href="#menu" data-icon="bars" class="ui-btn-left" data-transition="slide">Menu</a>
+    <h1>Secret Journal</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">   
+  
+
+  
+    <form>
+        <label for="entry_title">Entry Title:</label>
+        <input type="text" name="entry_title" id="lname" placeholder="enter new title"/>
+        <label for="content">Content:</label>
+        <textarea cols="40" rows="8" name="content" id="fname" placeholder="enter new content"></textarea>
+    </form>
+    
+    <a href=# class="ui-btn" id="insert">Save</a>
+  </div>
+  
+  <!--  SIDE BAR (BELOW) -->
+	<div data-role="panel" id="menu" data-position="left" data-display="overlay"  data-theme="a">
+        <h3>Menu</h3>
+        
+		<div data-role="controlgroup" data-type="vertical">
+          <a href="#" class="ui-btn" id="list">View past entries</a>
+        </div>
+        
+        <h4>Important</h4>
+        <div data-role="controlgroup" data-type="vertical">
+          <!--create database for journal-->
+          <a href="#" class="ui-btn" id="create"><sup>1</sup>&nbsp;Create Journal</a>
+          <!--delete database for journal-->
+          <a href="#" class="ui-btn" id="remove"><sup>2</sup>&nbsp;Delete Journal</a>
+        </div>
+        
+        <p><font size="-1">
+        	<sup>1</sup>&nbsp;Only create your journal once.<br/>&nbsp;[Create again if it's deleted.]<br/>
+        	<sup>2</sup>&nbsp;This action is permanent.
+            </font>
+        </p>
+        
+	</div>
+    
+<!-- SIDE BAR (ABOVE)  -->
+
+  
+</div>
+
+<div data-role="page" id="win2">
+  <div data-role="header">
+    <a href="#menu1" data-icon="bars" class="ui-btn-left" data-transition="slide">Menu</a>
+    <a data-rel="back" data-icon="back" class="ui-btn-right" data-transition="slide" data-direction="reverse">Back</a>
+    <h1>Journal Entries</h1>
+    
+    <form class="ui-filterable">
+    	<input id="filter_basic" data-type="search">
+	</form>
+    
+  </div>
+
+
+  <div data-role="main" class="ui-content">
+    	<div data-role="content">
+  		
+        
+        <!--INFORMATION WILL BE ADDED TO HERE-->
+        
+  		</div>
+  </div>
+ 
+  
+    <!-- SIDE BAR (BELOW) -->
+	<div data-role="panel" id="menu1" data-position="left" data-display="overlay"  data-theme="a">
+        <h3>Left Panel: Overlay</h3>
+        <p>This panel is positioned on the left with the overlay display mode. The panel markup is <em>after</em> the header, content and footer in the source order.</p>
+        <p>To close, click off the panel, swipe left or right, hit the Esc key, or use the button below:</p>
+
+	</div>
+    
+<!-- SIDE BAR (ABOVE)  -->
+  
+</div>
+
+
+
+
+
+
+<!--DATABASE JAVASCRIPTS (BELOW)-->
+
+<script>
+
+var db = openDatabase ("Test", "1.0", "Test", 100000);
+
+
+<!--CREATE DATABASE-->
+$("#create").bind ("click", function (event)
+{
+  db.transaction (function (transaction) 
+  {
+    var sql = "CREATE TABLE customers " +
+        " (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+        "lname VARCHAR(100) NOT NULL, " + 
+        "fname VARCHAR(1000000) NOT NULL)"
+    transaction.executeSql (sql, undefined, function ()
+    { 
+      alert ("Table created");  
+	  
+    }, error);
+  });
+});
+
+<!--DELETE DATABASE-->
+$("#remove").bind ("click", function (event)
+{
+  if (!confirm ("Delete table?", "")) return;;
+  db.transaction (function (transaction) 
+  {
+    var sql = "DROP TABLE customers";
+    transaction.executeSql (sql, undefined, ok, error);
+  });
+});
+
+$("#insert").bind ("click", function (event)
+{
+  var lname = $("#lname").val ();
+  var fname = $("#fname").val ();
+  
+  db.transaction (function (transaction) 
+  {
+    var sql = "INSERT INTO customers (lname, fname) VALUES (?, ?)";
+    transaction.executeSql (sql, [lname, fname], function ()
+    { 
+      alert ("Journal entry saved!");
+	  
+	  //refresh to remove the entry!
+	  //location.reload();
+    }, error);
+  });
+});
+
+
+
+
+<!--list entry function-->
+$("#list").bind ("click", function (event)
+{
+	alert("hhhhhhhh click");
+	
+  db.transaction (function (transaction) 
+  {
+    var sql = "SELECT * FROM customers";
+    transaction.executeSql (sql, undefined, 
+    function (transaction, result)
+    {
+		
+      /*var html = "<ul data-role='listview'>";
+	   <!--original above-->
+	   
+		var html= "<form>";
+	  		html+= "<input data-type='search' id='searchForCollapsibleSet'></form>";
+
+          html += "<div data-role='collapsible-set' data-filter='true' data-inset='true' id='collapsiblesetForFilter' data-input='#searchForCollapsibleSet'>";*/
+				
+ 		var html = "<form class='ui-filterable'>";
+    	html += "<input id='filter_basic' data-type='search'>";
+	html += "</form>";
+
+	html+="<ul data-role='listview' data-filter='true' data-input='#filter_basic'>";
+
+		  
+	  alert("length="+result.rows.length);
+	  alert(html);
+	  
+      if (result.rows.length)
+      {
+        for (var i = 0; i < result.rows.length; i++) 
+        {
+          var row = result.rows.item (i);
+          var lname = row.lname;
+          var fname = row.fname;
+          var id = row.id;
+		  console.info(row.lname);
+		   console.info(row.fname);
+		  
+          /*html += "<li" + "id=" + id + ">";
+          html +=   "<a href='#'>";
+          html +=   lname + "&nbsp;" + fname; 
+          html +=   "</a>"; 
+          html += "</li>";*/  
+		  
+		 
+			//html+= "<li" + " id=" + id + ">";
+			html+= "<li>";
+			html+= lname + " : " + fname;
+			html+= "</li>";	  
+		  
+		  
+		  /*html+= "<div data-role=collapsible id="+id+" data-filtertext="+lname+">";
+          html+= "<h3>"+lname+"</h3>";
+          html+= "<ul data-role='listview' data-inset='false'>";
+          html+= "<li>"+fname+"</li>";
+          html+= "</ul>";
+          html+= "</div>";*/  
+		  
+        }
+      }
+      else
+      {
+        html += "<li> No entries </li>";
+      }
+
+			
+      html += "</ul>";
+	  
+	  alert("setp2");
+	  alert(html);
+		  
+      
+      $("#win2").unbind ().bind ("pagebeforeshow", function ()
+      {
+        var $content = $("#win2 div:jqmData(role=content)");
+        $content.html (html);
+        var $ul = $content.find ("ul");
+        $ul.listview ();
+        
+        $("div").bind ("swiperight", function (event)
+        {
+          var id = $(this).attr ("id");
+          if (!id) return;
+          
+          $(this).remove ();
+          
+          db.transaction (function (transaction) 
+          {
+            var sql = "DELETE FROM customers WHERE id=?";
+            transaction.executeSql (sql, [id], function ()
+            { 
+              alert ("Customer deleted");
+            }, error);
+          });
+        });        
+      });
+      
+      $.mobile.changePage ($("#win2"));
+      
+    }, error);
+  });
+});
+
+
+
+function ok ()
+{
+}
+
+function error (transaction, err) 
+{
+  alert ("DB error : " + err.message);
+  return false;
+}
+
+
+
+
+</script>
+<!--DATABASE JAVASCRIPTS (ABOVE)-->
+</body>
+</html>

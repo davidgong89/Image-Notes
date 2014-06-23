@@ -4,38 +4,53 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.css" />
-    <script src="jquery.mobile-1.4.2/jquery-1.11.1.min.js"></script>
-	<script src="jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js"></script>
-</head>
+    <script type="text/javascript" src="jquery.mobile-1.4.2/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    
+    
+    <script>
+            var listCreated = false;
+            function appendToList(){
+                
+                //Create the listview if not created
+                if(!listCreated){
+                    $("#content").append("<ul id='list' data-role='listview' data-filter='true' data-filter-placeholder='Search fruits...' data-inset='true'></ul>");
+                    listCreated = true;
+                    $("#content").trigger("create");
+                }
+                $("#list").append("<li><a href='#' data-transition='slide'>Apple</a></li>");
+                $("#list").listview("refresh");
+                
+            }
+        </script>
 
-
-
-
-<title>Image Photos</title>
+    
+    
+    
+	<title>Image Photos</title>
 </head>
 
 <body>
+
 <!--HEADER-->
 <div data-role="header" style="overflow:hidden;">
-<h1>I'm a header</h1>
-    <a href="#" data-icon="gear" class="ui-btn-right">Options</a>
-    <div data-role="navbar">
+<h1>Image Notes</h1>
+    <a href="#" data-icon="bars" class="ui-btn-left">Menu</a>
+    <a href="#" data-icon="plus" class="ui-btn-right" onclick="appendToList()">Add</a>
+    <!--<div data-role="navbar">
         <ul>
             <li><a href="#">One</a></li>
             <li><a href="#">Two</a></li>
             <li><a href="#">Three</a></li>
         </ul>
-    </div><!-- /navbar -->
+    </div>-->
 </div><!-- /header -->
 
 
-
-	<div role="main" class="ui-content">
-CONTENTS
-	</div><!-- /content -->
-
-
-
+<!--BODY-->
+	<div role="main" class="ui-content" id="content">
+		
+	</div>
 
 <!--FOOTER-->
 <div data-role="footer" style="overflow:hidden;">
